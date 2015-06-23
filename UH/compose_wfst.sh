@@ -1,4 +1,12 @@
 dir=~/local_home/nn_post
-fstcompile --isymbols=isyms.txt --osymbols=osyms.txt $dir/H.text.fst | fstarcsort --sort_type=olabel > $dir/H.fst
-fstcompile --isymbols=isyms.txt --osymbols=osyms.txt $dir/U.fst/U.fdhc0_si1559.fst | fstarcsort --sort_type=olabel > $dir/U.fst/fdhc0_si1559.fst
-fstcompose $dir/H.fst $dir/U.fst/fdhc0_si1559.fst $dir/UH.fst
+fstcompile --isymbols=$dir/isyms.txt --osymbols=$dir/phones_disambig.txt $dir/H.text.fst_inv | fstarcsort --sort_type=olabel > $dir/H.fst
+
+rm -rf $dir/U.fst;mkdir $dir/U.fst
+rm -rf $dir/UH.fst;mkdir $dir/UH.fst
+
+while read fname flen
+do
+echo $fname
+fstcompile --isymbols=$dir/isyms.txt --osymbols=$dir/osyms.txt $dir/U.text.fst/U.$fname.fst_inv | fstarcsort --sort_type=olabel > $dir/U.fst/$fname.fst
+fstcompose $dir/H.fst $dir/U.fst/$fname.fst $dir/UH.fst/$fname.fst
+done < $dir/seq_info
