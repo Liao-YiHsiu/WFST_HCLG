@@ -29,12 +29,12 @@
    phone_disambig_symbol=`grep \#0 phones_disambig.txt | awk '{print $2}'`
    word_disambig_symbol=`grep \#0 words.txt | awk '{print $2}'`
 
+  #    | sed -E 's/[0-9]*.?[0-9]+$//g' \
    ./make_lexicon_fst.pl lexicon.39.txt 0.5 "sil" \
-      | sed -E 's/[0-9]*.?[0-9]+$//g' \
       | fstcompile --isymbols=phones_disambig.txt --osymbols=words.txt \
       --keep_isymbols=false --keep_osymbols=false \
       | ./fstaddselfloops  "echo $phone_disambig_symbol |" \
       "echo $word_disambig_symbol |" \
-      | fstarcsort --sort_type=olabel > Lexicon.fst  2>/dev/null
+      | fstarcsort --sort_type=olabel > Lexicon.fst 
 
     cp Lexicon.fst ../L.fst
