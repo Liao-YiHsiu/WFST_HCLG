@@ -36,3 +36,5 @@
       | fstarcsort --sort_type=olabel > Lexicon.fst 
     #  | ./fstaddselfloops  "echo $phone_disambig_symbol |" \
     #  "echo $word_disambig_symbol |" \
+
+    cp Lexicon.fst ../L.fst
