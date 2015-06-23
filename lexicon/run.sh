@@ -33,8 +33,8 @@
       | sed -E 's/[0-9]*.?[0-9]+$//g' \
       | fstcompile --isymbols=phones_disambig.txt --osymbols=words.txt \
       --keep_isymbols=false --keep_osymbols=false \
-      | fstarcsort --sort_type=olabel > Lexicon.fst 
-    #  | ./fstaddselfloops  "echo $phone_disambig_symbol |" \
-    #  "echo $word_disambig_symbol |" \
+      | ./fstaddselfloops  "echo $phone_disambig_symbol |" \
+      "echo $word_disambig_symbol |" \
+      | fstarcsort --sort_type=olabel > Lexicon.fst  2>/dev/null
 
     cp Lexicon.fst ../L.fst
