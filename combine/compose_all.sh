@@ -1,4 +1,8 @@
 dir=~/local_home/nn_post
+# scale language model
+
+# combine LG
+
 rm -f $dir/UHLG.fst;mkdir $dir/UHLG.fst
 
 while read fname flen

@@ -25,7 +25,7 @@ sh mapNum2Phone.sh $dir/H.num.fst $dir/map.num2phone39_no_sil tmpB
 paste -d ' ' tmpA tmpB | cut -d ' ' -f1-3,9,10
 rm tmp*
 
-# compile binary file
-#fstcompile --isymbols=isyms.txt --osymbols=osyms.txt $dir/H.text.fst $dir/H.fst
-#fstcompile --isymbols=isyms.txt --osymbols=osyms.txt $dir/U.fst/U.fdhc0_si1559.fst $dir/U.fst/fdhc0_si1559.fst
-
+# inverse
+sh inverse.sh
+# compile
+sh compile.sh
