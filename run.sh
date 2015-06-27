@@ -3,6 +3,7 @@
 tmpdir=$(mktemp -d)
 nbest=1000
 G_scale=1
+prune=1
 PATH=$PATH:./utils
 
 . parse_options.sh
@@ -34,7 +35,7 @@ if [ ! -f $graph ]; then
    fstcompose data/HCL.fst data/G${G_scale}.fst | fstminimizeencoded | fstarcsort --sort_type=olabel > $graph
 fi
 
-fsttrim $U 1 $tmpdir/prune.fst
+fsttrim $U $prune $tmpdir/prune.fst
 fstcompose $tmpdir/prune.fst $graph > $tmpdir/result.fst
               
 fstshortestpath --nshortest=$nbest $tmpdir/result.fst | \
