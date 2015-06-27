@@ -24,6 +24,8 @@ graph=data/HCLG${G_scale}.fst
 
 if [ ! -f $graph ]; then
 
+   [ ! -d data ] && mkdir data
+
    [ ! -f L.fst ] && (cd lexicon && ./run.sh) > /dev/null 
 #[ ! -f G.fst ] && (cd language_model && ./run.sh)
 
