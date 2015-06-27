@@ -1,0 +1,1 @@
+/home_local/wyc2010/nn_post/U.fst/
