@@ -26,11 +26,12 @@ if [ ! -f $graph ]; then
    [ ! -f L.fst ] && (cd lexicon && ./run.sh) > /dev/null 
 #[ ! -f G.fst ] && (cd language_model && ./run.sh)
 
-   fstcompose H.fst  C.fst > data/HC.fst
-   fstcompose data/HC.fst L.fst > data/HCL.fst
+   [ ! -f data/HC.fst  ] && fstcompose H.fst  C.fst > data/HC.fst
+   [ ! -f data/HCL.fst ] && fstcompose data/HC.fst L.fst > data/HCL.fst
 
-   fstscale G.fst $G_scale G${G_scale}.fst
-   fstcompose data/HCL.fst G${G_scale}.fst | fstminimizeencoded | fstarcsort --sort_type=olabel > $graph
+   [ ! -f data/G${G_scale}.fst ] && fstscale G.fst $G_scale data/G${G_scale}.fst
+
+   fstcompose data/HCL.fst data/G${G_scale}.fst | fstminimizeencoded | fstarcsort --sort_type=olabel > $graph
 fi
 
 fsttrim $U 1 $tmpdir/prune.fst
