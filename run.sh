@@ -3,6 +3,7 @@
 tmpdir=$(mktemp -d)
 nbest=1000
 G_scale=1
+C_scale=0.1
 prune=1
 PATH=$PATH:./utils
 
@@ -20,7 +21,7 @@ U=$1
 
 make -C utils >/dev/null 
 
-graph=data/HCLG${G_scale}.fst
+graph=data/HC${C_scale}LG${G_scale}.fst
 
 if [ ! -f $graph ]; then
 
@@ -29,12 +30,14 @@ if [ ! -f $graph ]; then
    [ ! -f L.fst ] && (cd lexicon && ./run.sh) > /dev/null 
 #[ ! -f G.fst ] && (cd language_model && ./run.sh)
 
-   [ ! -f data/HC.fst  ] && fstcompose H.fst  C.fst > data/HC.fst
-   [ ! -f data/HCL.fst ] && fstcompose data/HC.fst L.fst > data/HCL.fst
+   [ ! -f data/C${C_scale}.fst ] && (cd fuzzy && ./run.sh $C_scale) && cp C.fst data/C${C_scale}.fst
+
+   [ ! -f data/HC${C_scale}.fst  ] && fstcompose H.fst data/C${C_scale}.fst > data/HC${C_scale}.fst
+   [ ! -f data/HC${C_scale}L.fst ] && fstcompose data/HC${C_scale}.fst L.fst > data/HC${C_scale}L.fst
 
    [ ! -f data/G${G_scale}.fst ] && fstscale G.fst $G_scale data/G${G_scale}.fst
 
-   fstcompose data/HCL.fst data/G${G_scale}.fst | fstminimizeencoded | fstarcsort --sort_type=olabel > $graph
+   fstcompose data/HC${C_scale}L.fst data/G${G_scale}.fst | fstminimizeencoded | fstarcsort --sort_type=olabel > $graph
 fi
 
 fsttrim $U $prune $tmpdir/prune.fst

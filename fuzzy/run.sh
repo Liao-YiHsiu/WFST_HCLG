@@ -2,11 +2,15 @@
 
 # generating C.fst
 
-rm -f lexicon.39.txt
+value=0.1
+
+[ "$#" -eq 1 ] && value=$1
+
+echo "0 1 <eps> <eps> 0" > C.tex
 
 while read phone;
 do
-   echo "$phone $phone" >> lexicon.39.txt
+   echo "1 1 $phone $phone 0" >> C.tex
 done <../lexicon/phone_list
 
 while read line;
@@ -16,35 +20,14 @@ do
 
    for phone in $line;
    do
-      [ "$target" != "$phone" ] && echo "$phone $target" >> lexicon.39.txt
+      [ "$target" != "$phone" ] && \
+         echo "1 1 $phone $target $value" >> C.tex
    done
 done < rule.out
 
-   cut -f1 -d ' ' lexicon.39.txt | \
-      cat - <(echo "#0") | \
-      awk '{ print $0 " " FNR }' | \
-      cat <(echo "<eps> 0") - > words.txt
+echo "1 0" >> C.tex
 
-   # add disambig
-   ndisambig=`../lexicon/add_lex_disambig.pl lexicon.39.txt lexicon_disambig.txt` 
-   ndisambig=$[$ndisambig+1];
+fstcompile --isymbols=../lexicon/phones_num --osymbols=../lexicon/phones_num C.tex | \
+   fstarcsort --sort_type=olabel > ../C.fst
 
-   ../lexicon/add_disambig.pl --include-zero ../lexicon/phones_num $ndisambig  > phones_disambig.txt 
-
-   phone_disambig_symbol=`grep \#0 phones_disambig.txt | awk '{print $2}'`
-   word_disambig_symbol=`grep \#0 words.txt | awk '{print $2}'`
-
-  #    | sed -E 's/[0-9]*.?[0-9]+$//g' \
-
-
-# ../lexicon/make_lexicon_fst.pl lexicon.39.txt 0.5 "sil" \
-#      | tee tmp \
-   cat tmp \
-      | fstcompile --isymbols=phones_disambig.txt --osymbols=words.txt \
-      --keep_isymbols=false --keep_osymbols=false \
-      | ../lexicon/fstaddselfloops  "echo $phone_disambig_symbol |" \
-      "echo $word_disambig_symbol |" \
-      | fstarcsort --sort_type=olabel > ../C.fst 
-
-
-#fstcompile --isymbols=../lexicon/phones_num --osymbols=../lexicon/phones_num C.tex > ../C.fst
+exit 0;
