@@ -17,7 +17,7 @@ void Usage(const char* progName){
    exit(-1);
 }
 
-void DFS(StdFst *fst, vector<int32> &path, vector<string> &osym, StateId s);
+void DFS(StdFst *fst, double &score, vector<int32> &path, vector<string> &osym, StateId s);
 
 int main(int argc, char** argv){
    if(argc != 2 && argc != 3) Usage(argv[0]);
@@ -40,14 +40,16 @@ int main(int argc, char** argv){
    if (!fst) Usage(argv[0]);
    
    vector<int32> path;
-   DFS(fst, path, osym, fst->Start());
+   double score;
+   DFS(fst, score, path, osym, fst->Start());
 
 }
 
-void DFS(StdFst *fst, vector<int32> &path, vector<string> &osym, StateId s){
+void DFS(StdFst *fst, double &score, vector<int32> &path, vector<string> &osym, StateId s){
    ArcIterator<StdFst> aiter(*fst, s);
 
    if(aiter.Done()){
+      cout << score << ",";
       if(osym.size() != 0){
          for(int i = 0; i < path.size(); ++i)
             cout << osym[path[i]] << " ";
@@ -58,12 +60,14 @@ void DFS(StdFst *fst, vector<int32> &path, vector<string> &osym, StateId s){
       cout << endl;
       return;
    }
+   double backup;
    for(; !aiter.Done(); aiter.Next()){
       const StdArc &arc = aiter.Value();
       if( arc.olabel != 0 )
          path.push_back(arc.olabel);
 
-      DFS(fst, path, osym, arc.nextstate);
+      backup = score + arc.weight.Value();
+      DFS(fst, backup, path, osym, arc.nextstate);
       if( arc.olabel != 0)
          path.pop_back();
    }

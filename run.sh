@@ -42,6 +42,6 @@ fstcompose $tmpdir/prune.fst $graph > $tmpdir/result.fst
               
 fstshortestpath --nshortest=$nbest $tmpdir/result.fst | \
         fstprintallpath - ./lexicon/words.txt  | \
-        sort -u
+        sort -t, -g | sort -t, -k2 -u
 
 rm -r $tmpdir
