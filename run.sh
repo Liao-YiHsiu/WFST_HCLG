@@ -37,7 +37,8 @@ if [ ! -f $graph ]; then
 
    [ ! -f data/G${G_scale}.fst ] && fstscale G.fst $G_scale data/G${G_scale}.fst
 
-   fstcompose data/HC${C_scale}L.fst data/G${G_scale}.fst | fstminimizeencoded 2>/dev/null | fstarcsort --sort_type=olabel > $graph
+   fstcompose data/HC${C_scale}L.fst data/G${G_scale}.fst | \
+      fstminimizeencoded 2>/dev/null | fstarcsort --sort_type=olabel > $graph
 fi
 
 fsttrim $U $prune $tmpdir/prune.fst
