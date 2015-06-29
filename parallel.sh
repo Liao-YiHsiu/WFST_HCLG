@@ -22,7 +22,7 @@ outdir=$2
 
 script=" ./run.sh ${nbest:+ --nbest $nbest} \
       ${G_scale:+ --G-scale $G_scale} \
-      ${C_scale:+ --C-scale $nbest} \
+      ${C_scale:+ --C-scale $C_scale} \
       ${prune:+ --prune $prune} "
 
 rm -rf $outdir && mkdir -p $outdir
